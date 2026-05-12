@@ -1,0 +1,14 @@
+module.exports={
+    development:{
+        client:'pg',
+        connection:{
+            user:'postgres',
+            host:'127.0.0.1',
+            password:'12345678',
+            database:'Lms'
+        },
+        migrations:{
+            directory:'./migrations'
+        }
+    }
+} 
