@@ -2,11 +2,15 @@ const express = require('express');
 const route = express.Router();
 const Leave = require('../models/leaves');
 const Emp = require('../models/employees');
+const Role = require('../models/roles');
 const errHandler = require('../utils/errHandler');
 //get Employee's leaves
 exports.getLeaveRequests = errHandler(async(req,res,next)=>{
     try{
         const result = await Leave.query();
+        if(!result){
+            throw new Error("No leaves found");
+        }
 
         res.json({
             message:"Leaves",
@@ -24,10 +28,10 @@ exports.getLeaveRequestById = errHandler(async(req,res,next)=>{
 
         const result = await Leave.query().findById(id);
         if(!result){
-            throw new Error("User not found");
+            throw new Error(`Leave with given id ${id} is not found`);
         }
         res.json({
-            message:"Get employee leave by id",
+            message:`Leave request of employee with id ${id}`,
             result
         })
     }catch(err){
@@ -92,15 +96,72 @@ exports.deleteLeaveRequest = errHandler(async(req,res,next)=>{
     }
 });
 
-/*route.update('/:id',async(req,res)=>{
+/*exports.updateLeaveRequestByManager = errHandler(async(req,res,next)=>{
+    try{
+        const {id,role} = req.params;
+        const {status} = req.body;
+        const leaveRequest = await Leave.query().findById(id);
+        if(!leaveRequest){
+            throw new Error("Leave request not found");
+        }
+        if(role !== "MANAGER"){
+            throw new Error("Access denied");
+        }
+        const leaveStatus = await Leave.query().findById(id).where('status','pending');
+        if(!leaveStatus){
+            throw new Error("Leave request has already been processed");
+            
+        }else{
+            const result = await Leave.query().findById(id).patchAndFetchById(id,{status});
+            res.json({
+                message:"Updated leave request by manager",
+                result
+            })
+        }
+    }catch(err){
+        next(err);
+    }
+});*/
+/*
+//accept or reject leave
+exports.updateLeaveRequestByManager = errHandler(async(req,res,next)=>{
     try{
         const id = req.params.id;
-        const{role} = req.body;
-        if(role === "Manager"){
-            const accept = await Leave.query()
+        const {idl,status} = req.body;
+        const obj = await Role.query().findById(idr);
+        if(obj.name !== "MANAGER"){
+            throw new Error("Access denied");
         }
+        const leaveRequest = await Leave.query().findById(id);
+        console.log(leaveRequest);
+        console.log(leaveRequest.status);
+        if(!leaveRequest){
+            throw new Error("Leave request not found");
+        }
+        if(leaveRequest.status === "pending"){
+            
+            const result = await Leave.query().findById(id).patchAndFetchById(id,status);
+            /*const result = await Role.query()
+                       .join('employees','roles.emp_id','employees.id')
+                       .join('leaves','employees.id','leaves.emp_id')
+                       .groupBy('status','leaves.id')
+                       .havingRaw(`leaves.id = ${idl}`)
+                       
+                       .patchAndFetchById(idl,Status);//
+            console.log(result);
+                     
+            res.json({
+                message:"Updated leave request by manager",
+                result
+            })
+        }else{
+            throw new Error("Leave request has already been processed");
+            
+        }
+    }catch(err){
+        next(err);
     }
-})*/
+});*/
 
 
-//module.exports = route;
+
