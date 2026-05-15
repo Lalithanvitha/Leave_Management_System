@@ -33,6 +33,14 @@ class Leave extends Model{
                 to_date:{
                     type:'string',
                     format:'date'
+                },
+                                created_at:{
+                    type:'string',
+                    format:'date'
+                },
+                updated_at:{
+                    type:'string',
+                    format:'date'
                 }
             }
         };
