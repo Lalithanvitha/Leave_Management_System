@@ -1,8 +1,17 @@
 const {Model} = require('../connection');
-class Role extends Model{
+const {BaseModel} = require('./baseModel');
+class RolesModel extends Model{
+    id;
+    name;
+    emp_id;
     static get tableName(){
         return 'roles';
     };
+    /*static get columns(){
+        id:'id';
+        name:'name';
+        emp_id:'emp_id';
+    }*/
     static get jsonSchema(){
         return{
             type:'object',
@@ -20,7 +29,7 @@ class Role extends Model{
                 emp_id:{
                     type:'integer'
                 },
-                                created_at:{
+                created_at:{
                     type:'string',
                     format:'date'
                 },
@@ -33,4 +42,4 @@ class Role extends Model{
         };
     }
 };
-module.exports = Role;
+module.exports = RolesModel;

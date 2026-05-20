@@ -1,8 +1,25 @@
 const {Model} = require('../connection');
-class Leave extends Model{
+const {BaseModel} = require('./baseModel');
+const {leaveStatus} = require('../helpers/enumHelper');
+class LeavesModel extends Model{
+    id;
+    emp_id;
+    leavereason;
+    status;
+    from_date;
+    to_date;
+    days;
     static get tableName(){
         return 'leaves';
     };
+    /*static get columns(){
+        id:'id';
+        emp_id:'emp_id';
+        leavereason:'leavereason';
+        status:'status';
+        from_date:'from_date';
+        to_date:'to_date;'
+    }*/
     static get jsonSchema(){
         return{
             type:'object',
@@ -10,7 +27,8 @@ class Leave extends Model{
                 'emp_id',
                 'leavereason',
                 'from_date',
-                'to_date'
+                'to_date',
+                'days'
             ],
             properties:{
                 id:{
@@ -24,7 +42,7 @@ class Leave extends Model{
                 },
                 status:{
                     type:'string',
-                    enum:['PENDING','APPROVED','REJECTED']
+                    enum:[leaveStatus.PENDING,leaveStatus.APPROVED,leaveStatus.REJECTED]
                 },
                 from_date:{
                     type:'string',
@@ -34,13 +52,16 @@ class Leave extends Model{
                     type:'string',
                     format:'date'
                 },
-                                created_at:{
+                created_at:{
                     type:'string',
                     format:'date'
                 },
                 updated_at:{
                     type:'string',
                     format:'date'
+                },
+                days:{
+                    type:'integer'
                 }
             }
         };
@@ -50,4 +71,4 @@ class Leave extends Model{
 //(status)
 
 };
-module.exports = Leave;
+module.exports = LeavesModel;

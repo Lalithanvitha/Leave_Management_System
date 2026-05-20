@@ -1,8 +1,18 @@
 const {Model} = require('../connection');
-class Emp extends Model{
+const {BaseModel} = require('./baseModel');
+class EmployeesModel extends Model{
+    id ;
+    name ;
+    email ;
+    leave_balance;
     static get tableName(){
         return 'employees';
     }
+    /*static get columns(){
+        id:'id';
+        name:'name';
+        email:'email';
+    }*/
     static get jsonSchema(){
         return{
             type:'object',
@@ -27,6 +37,9 @@ class Emp extends Model{
                 updated_at:{
                     type:'string',
                     format:'date'
+                },
+                leave_balance:{
+                    type:'integer'
                 }
             }
         };
@@ -62,4 +75,4 @@ class Emp extends Model{
 
 
 };
-module.exports = Emp;
+module.exports = EmployeesModel;
