@@ -32,6 +32,6 @@ const LeavesSchema = {
 
     },
 
-    required: ["emp_id","leavereason","status","from_date","to_date","days"]
+    required: ["emp_id","leavereason","from_date","to_date","days"]
 };
 module.exports = {LeavesSchema};

@@ -88,11 +88,7 @@ exports.updateLeaveRequestByManager = async(id,idl,status)=>{
     }
     const obj = await RolesModel.query().findById(id);//fetch roles object with given id
     if(obj.name !== "MANAGER"){//if role name is strictly NOT equal to "MANAGER" throw error response
-        return errorResponse(
-            res,
-            "Access denied",
-            403
-        );
+        throw createError(403,"Access denied");
     }
     const leaveRequest = await LeavesModel.query().findById(idl);//fetch leave request by given id
     console.log(leaveRequest);//log leave request in console
