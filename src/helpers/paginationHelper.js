@@ -1,12 +1,9 @@
-const pagination =(page,limit)=> {
+const pagination = async (model,page,limit)=> {
     const currentPage = parseInt(page) || 1;
     const perPage = parseInt(limit) || 15;
     const offset = (page - 1)*limit;
-    return{
-        page:currentPage,
-        limit:perPage,
-        offset:offset
-    }
+    const result = await model.limit(perPage).offset(offset)
+    return result;
 }
 module.exports = {pagination};
 

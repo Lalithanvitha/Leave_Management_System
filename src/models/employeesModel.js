@@ -1,5 +1,5 @@
 const {Model} = require('../connection');
-const {BaseModel} = require('./baseModel');
+// const {BaseModel} = require('./baseModel');
 class EmployeesModel extends Model{
     id ;
     name ;

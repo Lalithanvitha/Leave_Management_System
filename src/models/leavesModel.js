@@ -66,6 +66,19 @@ class LeavesModel extends Model{
             }
         };
     }
+    static get relationMappings() {
+        const Employee = require('./employeesModel')
+        return {
+            employees: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Employee,
+                join: {
+                    from: 'leaves.emp_id',
+                    to: 'employees.id'
+                }
+            }
+        };
+    }
 // Database index exists on:
 // (employee_id, status)
 //(status)

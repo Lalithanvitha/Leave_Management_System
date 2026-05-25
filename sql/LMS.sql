@@ -27,7 +27,6 @@ name VARCHAR(20),
 emp_id INT ,
 CONSTRAINT fk_emp_id FOREIGN KEY (emp_id) REFERENCES employees(id)
 );
-
 SELECT * FROM roles;
 
 --Insert values into roles
@@ -64,18 +63,16 @@ VALUES
 --drop fk constraint
 alter table leaves drop constraint fk;
 
---add fk constraint with on delete cascade
+--add fk con
 alter table leaves
 add constraint fk_id foreign key(emp_id) references employees(id) on delete cascade;
 
---add column status with default value 'pending'
 alter table leaves add column status varchar(20) default 'pending';
 
---join employees and leaves table
 select * from employees e 
 join leaves l on e.id = l.emp_id;
 
---drop column leaves
+
 ALTER TABLE employees
 DROP COLUMN leaves ;
 
@@ -83,101 +80,73 @@ SELECT * FROM employees;
 SELECT * FROM leaves;
 SELECT * FROM roles;
 
+SELECT * FROM employees e
+JOIN roles r ON e.id = r.emp_id 
+group by e.id , r.id
+having r.name='QA';
 
---joining three tables (getting status of a leave request with id = 3)
 SELECT status FROM roles r
 JOIN employees e ON r.emp_id = e.id
 JOIN leaves l ON e.id = l.emp_id
 GROUP BY status,l.id
 HAVING l.id = 3;
 
---join three tables
 SELECT * FROM roles r
-JOIN employees e ON r.emp_id = e.id
+RIGHT JOIN employees e ON r.emp_id = e.id
 JOIN leaves l ON e.id = l.emp_id;
 
---select all column values with id = idl 
 select * from leaves where id = idl
 
---update status to approved where id = 4
 alter table leaves 
 update leaves 
 set status='Approved' where id =4;
-
-
 select * from roles
 
---add column from_date with default value to leaves
 alter table leaves
 add column from_date date default '5/14/26'
---add column to_date with default value to leaves
 alter table leaves
 add column to_date date default '5/16/26';
 
---add column created_at with current time stamp to employees
 alter table employees 
 add column created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
---add column updated_at with current time stamp to employees
 alter table employees
 add column updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
---add column created_at with current time stamp to leaves
-alter table leaves 
-add column created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
---add column updated_at with current time stamp to leaves
-alter table leaves
-add column updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
---add column created_at with current time stamp to roles
-alter table roles 
-add column created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
---add column updated_at with current time stamp to roles
-alter table roles
-add column updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
 select * from employees;
 
---get emp id , role name , emp name where role = QA
+alter table employees drop column updated_at;
+
 select e.id,r.name,e.name from employees e
 join roles r on e.id = r.emp_id
 group by r.name,e.id having r.name = 'QA';
 
---get emp id , emp name where role = QA
 select e.id,e.name from roles r
 join employees e on r.emp_id = e.id
 group by e.name,e.id,r.name having r.name = 'QA';
 
---creating enumeration for column status in table leaves
 CREATE TYPE leave_status as ENUM(
 'PENDING',
 'APPROVED',
 'REJECTED'
 );
 
---update status values to upper case
 UPDATE leaves
 SET status = UPPER(status);
 
---drop default value for status column
 ALTER TABLE leaves
 ALTER COLUMN status DROP DEFAULT;
 
---changing the type of status to leave_status
 ALTER TABLE leaves
 ALTER COLUMN status TYPE leave_status
 USING status::leave_status;
 
---set default value of status to 'pending'
 ALTER TABLE leaves
 ALTER COLUMN status SET DEFAULT 'PENDING';
 
 SELECT * FROM leaves;
 
---create composite index for leaves(emp_id,status);
 CREATE INDEX idx_leave_emp_status
 ON leaves(emp_id,status);
 
---select all column values from leaves where status = 'pending' emp_id = 12
 select * from leaves
 where status = 'PENDING' AND emp_id = 12;
 
@@ -190,8 +159,30 @@ EXPLAIN ANALYZE
 SELECT * FROM leaves
 where status = 'PENDING';
 
---create index for status column in leaves table
 CREATE INDEX idx_leave_status
 ON leaves(status);
 
+--add column days to leaves table
+alter table leaves add column days integer default 3;
+alter table leaves drop column days ;
+--add column leave_balance to employees table
+alter table employees add column leave_balance integer default 10;
 
+SELECT id, leave_balance
+FROM employees
+WHERE id = 4;
+
+alter table employees
+truncate table employees,leaves,roles;
+
+INSERT INTO roles(name,emp_id)
+VALUES
+('QA',22),
+('MANAGER',24);
+select * from roles;
+select * from leaves;
+
+INSERT INTO leaves(emp_id,leavereason,from_date,to_date,days)
+VALUES
+(22,'Sick leave','2026-05-24','2026-05-25',2),
+(24,'Casual leave','2026-05-25','2026-05-26',2);

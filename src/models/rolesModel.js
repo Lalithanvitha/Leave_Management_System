@@ -41,5 +41,18 @@ class RolesModel extends Model{
             }
         };
     }
+    static get relationMappings() {
+        const Employee = require('./employeesModel')
+        return {
+            employees: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Employee,
+                join: {
+                    from: 'roles.emp_id',
+                    to: 'employees.id'
+                }
+            }
+        };
+    }
 };
 module.exports = RolesModel;
