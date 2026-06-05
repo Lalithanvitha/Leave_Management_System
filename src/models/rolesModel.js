@@ -1,58 +1,54 @@
-const {Model} = require('../connection');
-const {BaseModel} = require('./baseModel');
-class RolesModel extends Model{
-    id;
-    name;
-    emp_id;
-    static get tableName(){
-        return 'roles';
-    };
-    /*static get columns(){
+const { Model } = require("../connection");
+const { BaseModel } = require("./baseModel");
+class RolesModel extends Model {
+  id;
+  name;
+  emp_id;
+  static get tableName() {
+    return "roles";
+  }
+  /*static get columns(){
         id:'id';
         name:'name';
         emp_id:'emp_id';
     }*/
-    static get jsonSchema(){
-        return{
-            type:'object',
-            required:[
-                'name',
-                'emp_id'
-            ],
-            properties:{
-                id:{
-                    type:'integer'
-                },
-                name:{
-                    type:'string'
-                },
-                emp_id:{
-                    type:'integer'
-                },
-                created_at:{
-                    type:'string',
-                    format:'date'
-                },
-                updated_at:{
-                    type:'string',
-                    format:'date'
-                }
-
-            }
-        };
-    }
-    static get relationMappings() {
-        const Employee = require('./employeesModel')
-        return {
-            employees: {
-                relation: Model.BelongsToOneRelation,
-                modelClass: Employee,
-                join: {
-                    from: 'roles.emp_id',
-                    to: 'employees.id'
-                }
-            }
-        };
-    }
-};
+  static get jsonSchema() {
+    return {
+      type: "object",
+      required: ["name", "emp_id"],
+      properties: {
+        id: {
+          type: "integer",
+        },
+        name: {
+          type: "string",
+        },
+        emp_id: {
+          type: "integer",
+        },
+        created_at: {
+          type: "string",
+          format: "date",
+        },
+        updated_at: {
+          type: "string",
+          format: "date",
+        },
+      },
+    };
+  }
+  static get relationMappings() {
+    const Employee = require("./employeesModel");
+    return {
+      employees: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Employee,
+        join: {
+          from: "roles.emp_id",
+          to: "employees.id",
+        },
+      },
+    };
+  }
+}
 module.exports = RolesModel;

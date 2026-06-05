@@ -1,38 +1,52 @@
-/*const Joi = require('joi');
-
-const createRolesSchema =
-Joi.object({
-
-   name:
-   Joi.string()
-       .required(),
-
-   emp_id:
-   Joi.number()
-       .integer()
-       .required()
-
-});
-
-module.exports = {createRolesSchema};*/
-const Ajv = require('ajv');
+const Ajv = require("ajv");
+const addFormats = require("ajv-formats");
 const roleSchema = {
-    type: "object",
+  type: "object",
 
-    properties: {
-        id: {
-            type:"integer"
-        },
-        name: {
-            type: "string"
-        },
-        emp_id: {
-            type: "integer"
-        }
-        
-
+  properties: {
+    id: {
+      type: "integer",
     },
+    name: {
+      type: "string",
+    },
+    emp_id: {
+      type: "integer",
+    },
+  },
 
-    required: ["name","emp_id"]
+  required: ["name", "emp_id"],
 };
-module.exports = {roleSchema};
+
+const RolesQuerySchema = {
+  type: "object",
+  properties: {
+    page: {
+      type: "string",
+      pattern: "^[0-9]+$",
+    },
+    limit: {
+      type: "string",
+      pattern: "^[0-9]+$",
+    },
+    role: {
+      type: "string",
+    },
+  },
+  //required: ["page", "limit", "role"],
+  additionalProperties: false,
+};
+
+const RolesParamsSchema = {
+  type: "object",
+  properties: {
+    id: {
+      type: "string",
+      pattern: "^[0-9]+$",
+    },
+  },
+  required: ["id"],
+  additionalProperties: false,
+};
+
+module.exports = { roleSchema, RolesQuerySchema, RolesParamsSchema };

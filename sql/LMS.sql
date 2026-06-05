@@ -81,7 +81,7 @@ SELECT * FROM leaves;
 SELECT * FROM roles;
 
 SELECT * FROM employees e
-JOIN roles r ON e.id = r.emp_id 
+LEFT JOIN roles r ON e.id = r.emp_id 
 group by e.id , r.id
 having r.name='QA';
 
@@ -186,3 +186,108 @@ INSERT INTO leaves(emp_id,leavereason,from_date,to_date,days)
 VALUES
 (22,'Sick leave','2026-05-24','2026-05-25',2),
 (24,'Casual leave','2026-05-25','2026-05-26',2);
+
+ALTER TABLE employees 
+ADD COLUMN password VARCHAR(225);
+
+--Create Sessions table
+CREATE TABLE sessions (
+    id SERIAL PRIMARY KEY,
+    emp_id INT ,
+    CONSTRAINT fk_emp_id FOREIGN KEY (emp_id) REFERENCES employees(id),
+    session_id UUID NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+select * from sessions;
+truncate tablesessions
+select name,email,leave_balance,password,manager_id from employees;
+select * from leaves;
+select id,emp_id,leavereason,status,email_sent from leaves;
+select * from ROLES;
+
+INSERT INTO EMPLOYEES(id,manager_id)
+VALUES
+(25,24);
+('QA',34),
+('UI',46),
+('UI',40),
+('HR',37),
+('HR',55),
+('DEV',38),
+('DEV',48),
+('DEV',42),
+('PM',41),
+('DA',54),
+('DA',44),
+('BA',49),
+('BA',45),
+('QA',43);
+
+
+SELECT E.ID, R.NAME,E.MANAGER_ID FROM employees e
+LEFT JOIN roles r ON e.id = r.emp_id;
+
+ALTER TABLE employees  ADD COLUMN manager_id INT;
+
+update employees set manager_id = 37 where id =55;
+
+SELECT
+    TO_CHAR(from_date, 'YYYY-MM') AS month,
+    COUNT(*) AS total_leaves
+FROM leaves
+where emp_id = 24
+GROUP BY TO_CHAR(from_date, 'YYYY-MM')
+ORDER BY month;
+
+SELECT
+	e.name as employee_name,
+    TO_CHAR(from_date, 'YYYY-MM') AS month,
+    COUNT(*) AS total_leaves
+FROM employees e
+left join leaves l on e.id = l.emp_id
+and TO_CHAR(from_date, 'YYYY-MM') = '2026-05'
+GROUP BY e.name
+ORDER BY e.name;
+
+SELECT
+    '2026-01' AS month,
+    e.name,
+    COUNT(l.id) AS total_leaves
+FROM employees e
+LEFT JOIN leaves l
+    ON e.id = l.emp_id
+    AND l.from_date >= '2026-05-01'
+    AND l.from_date < '2026-06-01'
+GROUP BY e.id, e.name
+ORDER BY e.name;
+
+ALTER TABLE leaves
+ADD COLUMN email_sent BOOLEAN DEFAULT FALSE;
+
+select * from leaves l
+join employees e on l.emp_id = e.id;
+
+SELECT id, status, email_sent
+FROM leaves
+WHERE id = 53;
+
+create table months(
+month_name varchar(20),
+month_num integer
+);
+select * from months;
+insert into months(month_num,month_name)
+values
+(1,'January'),
+(2,'February'),
+(3,'March'),
+(4,'April'),
+(5,'May'),
+(6,'June'),
+(7,'July'),
+(8,'August'),
+(9,'September'),
+(10,'October'),
+(11,'November'),
+(12,'December');

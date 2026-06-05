@@ -1,51 +1,29 @@
-/*const validate =(schema) => {
-    return (req, res, next) => {
-        const { error } =schema.validate(req.body);
-        if(error){
-            return res.status(400).json({
-                      success: false,
-                      message:error.details[0].message
-                   });
-        }
-        next();
-   };
-};
-
-module.exports = validate;*/
-
-const Ajv = require('ajv');
+const Ajv = require("ajv");
 const addFormats = require("ajv-formats");
 
 const ajv = new Ajv({
-    allErrors: true
+  allErrors: true,
+  //coerceTypes: true,
 });
 addFormats(ajv);
-const validate = (
-    schema,
-    property = 'body'
-) => {
+const validate = (schema, property = "body") => {
+  const validator = ajv.compile(schema);
 
-    const validator =
-        ajv.compile(schema);
+  return (req, res, next) => {
+    const data = req[property];
 
-    return (req, res, next) => {
+    const valid = validator(data);
+    if (!valid) {
+      return res.status(400).json({
+        success: false,
+        error: true,
+        message: validator.errors[0].message,
+        data: {},
+      });
+    }
 
-        const data =
-            req[property];
-
-        const valid =
-            validator(data);
-
-        if (!valid) {
-
-            return res.status(400).json({
-                success: false,
-                errors: validator.errors
-            });
-        }
-
-        next();
-    };
+    next();
+  };
 };
 
 module.exports = validate;

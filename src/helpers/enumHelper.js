@@ -1,7 +1,6 @@
 const leaveStatus = {
-    PENDING:'PENDING',
-    APPROVED:'APPROVED',
-    REJECTED:'REJECTED'
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
 };
-module.exports = {leaveStatus};
-
+module.exports = { leaveStatus };

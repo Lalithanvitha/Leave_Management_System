@@ -1,6 +1,12 @@
-const {Model} = require('objection');
-const Knex = require('knex');
-const config = require('./knexfile');
-const knex = Knex(config.development);
-Model.knex(knex);
-module.exports = {Model};
+const { Model } = require("objection");
+const Knex = require("knex");
+const config = require("./knexfile");
+
+function bootstrap() {
+  console.log("Initializing...");
+  const knex = Knex(config.development);
+  Model.knex(knex);
+  console.log("application started");
+}
+
+module.exports = { Model, bootstrap };
